@@ -9,6 +9,7 @@ class SignupRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+
     public function authorize(): bool
     {
         return false;
@@ -19,6 +20,7 @@ class SignupRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
+    
     public function rules(): array
     {
         return [
