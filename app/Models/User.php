@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail 
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -29,7 +30,8 @@ class User extends Authenticatable
         'siret_number', // Champ supplémentaire
         'available_space', // Champ supplémentaire
         'password',
-        'role', // Assurez-vous que 'role' est inclus ici
+        'role',
+        'email_verified_token' // Assurez-vous que 'role' est inclus ici
     ];
 
     /**
@@ -40,6 +42,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_token'
     ];
 
     /**

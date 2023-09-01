@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('available_space', 10, 2)->nullable();
             $table->string('password');
             $table->string('role')->default('user');
+            $table->string('email_verified_token', 61)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

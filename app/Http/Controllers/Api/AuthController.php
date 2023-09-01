@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use http\Env\Response;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use App\Notifications\VerifyEmail;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SignupRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notification;
 
 class AuthController extends Controller
 {
     public function signup(SignupRequest $request)
     {
         $data = $request->validated();
+
+        $emailVerificationToken = Str::random(60);
+
         /** @var \App\Models\User $user */
+
         $user = User::create([
             'name' => $data['name'],
             'first_name' => $data['first_name'],
@@ -28,12 +35,15 @@ class AuthController extends Controller
             'available_space' => $data['available_space'],
             'password' => bcrypt($data['password']),
             'role' => 'user',
-        ]);        
-    
+            'email_verified_token' => $emailVerificationToken,
+        ]);
+
+        $user->notify(new VerifyEmail($user));
+
         $token = $user->createToken('main')->plainTextToken;
-        return response()->json(['user' => $user,'token' => $token]);
+        return response()->json(['user' => $user, 'token' => $token]);
     }
-    
+
 
     public function login(LoginRequest $request)
     {
@@ -56,6 +66,30 @@ class AuthController extends Controller
         $user = $request->user();
         $user->currentAccessToken()->delete();
         return response([
-            'message' => 'Utilisateur déconnecté'], 200);
+            'message' => 'Utilisateur déconnecté'
+        ], 200);
+    }
+
+    public function verifyEmail($token)
+    {
+        $user = User::where('email_verified_token', $token)->first();
+
+        if (!$user) {
+            // Jeton invalide
+            return response()->json(['message' => 'Lien de vérification invalide.'], 400);
+        }
+
+        if ($user->email_verified_at !== null) {
+            // L'e-mail a déjà été vérifié
+            return response()->json(['message' => 'Votre e-mail a déjà été vérifié.'], 200);
+        }
+
+        // Mettez à jour la colonne email_verified_at pour marquer l'e-mail comme vérifié
+        $user->email_verified_at = now();
+        $user->save();
+
+        // Connectez automatiquement l'utilisateur ou effectuez une autre action souhaitée
+
+        return response()->json(['message' => 'Votre e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter.'], 200);
     }
 }
