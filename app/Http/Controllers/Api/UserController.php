@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 
 class UserController extends Controller
 {
@@ -15,10 +16,6 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
-    {
-        return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate(10));
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -32,20 +29,24 @@ class UserController extends Controller
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-        return response(new UserResource($user) , 201);
+        return response(new UserResource($user), 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $user)
     {
-        return new UserResource($user);
-    }
+        // Vérifiez si l'utilisateur est connecté
+        if (Auth::check()) {
+            $authenticatedUser = Auth::user();
 
+            if ($authenticatedUser->id === $user->id) {
+                return new UserResource($user);
+            } else {
+                return response()->json(['message' => 'Accès non autorisé'], 403);
+            }
+        } else {
+            return response()->json(['message' => 'Utilisateur non connecté'], 401);
+        }
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -55,14 +56,26 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->validated();
-        if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        }
-        $user->update($data);
+        // Cette méthode est accessible uniquement pour l'utilisateur connecté
+        if (Auth::user()->id === $user->id) {
+            $data = $request->validated();
 
-        return new UserResource($user);
+            // Vérification si l'email est unique (ignorer l'email actuel de l'utilisateur)
+            if (isset($data['email']) && $data['email'] !== $user->email && User::where('email', $data['email'])->exists()) {
+                return response()->json(['message' => 'L\'email est déjà utilisé par un autre utilisateur'], 409);
+            }
+
+            if (isset($data['password'])) {
+                $data['password'] = bcrypt($data['password']);
+            }
+            $user->update($data);
+
+            return new UserResource($user);
+        } else {
+            return response()->json(['message' => 'Accès non autorisé'], 403);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -72,8 +85,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        // Cette méthode est accessible uniquement pour l'utilisateur connecté
+        if (Auth::user()->id === $user->id) {
+            $user->delete();
 
-        return response("", 204);
+            return response("", 204);
+        } else {
+            return response()->json(['message' => 'Accès non autorisé'], 403);
+        }
     }
 }

@@ -25,14 +25,22 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:55',
-            'email' => 'required|email|unique:users,email,'.$this->id,
+            'name' => 'string|max:255',
+            'first_name' => 'string|max:255',
+            'email' => 'email',
+            'phone_number' => 'string|max:20',
+            'address' => 'string|max:255',
+            'city' => 'string|max:255',
+            'postal_code' => 'string|max:20',
+            'siret_number' => 'nullable|string|max:20',
+            'available_space' => 'nullable|numeric',
             'password' => [
+                'nullable',
                 'confirmed',
                 Password::min(8)
                     ->letters()
                     ->symbols(),
-            ]
+            ],
         ];
     }
 }
