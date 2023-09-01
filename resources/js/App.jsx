@@ -1,12 +1,20 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from "react-router-dom"
+import Router from './utils/Router';
 
 export default function App(){
     return(
-        <h1>How To Install React in Laravel 9 with Vite</h1>
+        <Router />
     );
 }
 
 if(document.getElementById('root')){
-    createRoot(document.getElementById('root')).render(<App />)
+    createRoot(document.getElementById('root')).render(
+        <BrowserRouter>
+            <React.StrictMode>
+                <App/>
+            </React.StrictMode>
+        </BrowserRouter>
+    )
 }
