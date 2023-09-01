@@ -31,16 +31,7 @@ class UserController extends Controller
  
          return response()->json(['users' => $users], 200);
      }
-
-    public function store(StoreUserRequest $request)
-    {
-        $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
-        $user = User::create($data);
-
-        return response(new UserResource($user), 201);
-    }
-
+     
     public function show(User $user)
     {
         // Vérifiez si l'utilisateur est connecté

@@ -27,11 +27,13 @@ class AuthController extends Controller
             'siret_number' => $data['siret_number'],
             'available_space' => $data['available_space'],
             'password' => bcrypt($data['password']),
+            'role' => 'user',
         ]);        
-
+    
         $token = $user->createToken('main')->plainTextToken;
-        return response(compact('user', 'token'));
+        return response()->json(['user' => $user,'token' => $token]);
     }
+    
 
     public function login(LoginRequest $request)
     {

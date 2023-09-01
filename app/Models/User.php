@@ -29,6 +29,7 @@ class User extends Authenticatable
         'siret_number', // Champ supplémentaire
         'available_space', // Champ supplémentaire
         'password',
+        'role', // Assurez-vous que 'role' est inclus ici
     ];
 
     /**

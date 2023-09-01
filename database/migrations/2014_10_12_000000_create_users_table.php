@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('siret_number', 20)->nullable();
             $table->decimal('available_space', 10, 2)->nullable();
             $table->string('password');
+            $table->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
