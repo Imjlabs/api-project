@@ -26,13 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/list-files', [FileController::class, 'listFiles']);
 });
 
-
-
 Route::prefix('admin')->middleware(['auth:sanctum', 'App\Http\Middleware\IsAdmin'])->group(function () {
     Route::get('/users', [AdminController::class, 'listUsers']);
     Route::get('/users/{user}/files', [AdminController::class, 'viewUserFiles']);
+    Route::get('/users/files', [AdminController::class, 'viewAllUserFiles']);
 });
-
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);

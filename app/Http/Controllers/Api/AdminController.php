@@ -38,4 +38,25 @@ class AdminController extends Controller
 
         return response()->json(['user' => $user, 'files' => $files]);
     }
+
+    public function viewAllUserFiles()
+{
+    // Récupérez tous les utilisateurs depuis la base de données
+    $users = User::all();
+
+    // Initialisez un tableau vide pour stocker tous les fichiers
+    $allFiles = [];
+
+    // Parcourez tous les utilisateurs et récupérez leurs fichiers
+    foreach ($users as $user) {
+        // Récupérez les fichiers de cet utilisateur depuis la base de données
+        $files = $user->files;
+
+        // Ajoutez les fichiers de cet utilisateur au tableau $allFiles
+        $allFiles[$user->id] = $files;
+    }
+
+    return response()->json(['allFiles' => $allFiles]);
+}
+
 }
