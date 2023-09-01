@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreUserRequest;
+use App\Notifications\AccountDeleted;
 use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
@@ -17,21 +17,22 @@ class UserController extends Controller
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \App\Http\Requests\StoreUserRequest $request
-     * @return \Illuminate\Http\Response
-     */
-
-     public function index()
-     {
-         // Récupérer la liste de tous les utilisateurs
-         $users = User::all();
- 
-         return response()->json(['users' => $users], 200);
-     }
      
+    public function index(User $user)
+    {
+        // Vérifiez si l'utilisateur est connecté
+        if (Auth::check()) {
+            $authenticatedUser = Auth::user();
+
+            if ($authenticatedUser->id === $user->id) {
+                return new UserResource($user);
+            } else {
+                return response()->json(['message' => 'Accès non autorisé'], 403);
+            }
+        } else {
+            return response()->json(['message' => 'Utilisateur non connecté'], 401);
+        }
+    }
     public function show(User $user)
     {
         // Vérifiez si l'utilisateur est connecté
@@ -89,9 +90,13 @@ class UserController extends Controller
         if (Auth::user()->id === $user->id) {
             $user->delete();
 
-            return response("", 204);
+            $user->notify(new AccountDeleted);
+            
+            return response("Votre compte à bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
+
+
     }
 }

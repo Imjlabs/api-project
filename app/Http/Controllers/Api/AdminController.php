@@ -14,7 +14,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    
+
     public function listUsers()
     {
 
@@ -40,20 +40,22 @@ class AdminController extends Controller
     }
 
     public function viewAllUserFiles()
-{
+    {
+        $users = User::all();
+        $allFiles = [];
+        $totalFileCount = 0; // Initialiser le compteur total de fichiers
 
-    $users = User::all();
+        foreach ($users as $user) {
+            $files = $user->files;
+            $fileCount = $files->count(); // Compter le nombre de fichiers
+            $totalFileCount += $fileCount; // Ajouter au compteur total
+            $allFiles[$user->id] = [
+                'user' => $user,
+                'files' => $files,
+                'file_count' => $fileCount,
+            ];
+        }
 
-    $allFiles = [];
-
-    foreach ($users as $user) {
-
-        $files = $user->files;
-
-        $allFiles[$user->id] = $files;
+        return response()->json(['allFiles' => $allFiles, 'totalFileCount' => $totalFileCount], 200);
     }
-
-    return response()->json(['allFiles' => $allFiles]);
-}
-
 }
