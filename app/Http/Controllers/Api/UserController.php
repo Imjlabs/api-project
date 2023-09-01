@@ -23,6 +23,15 @@ class UserController extends Controller
      * @param \App\Http\Requests\StoreUserRequest $request
      * @return \Illuminate\Http\Response
      */
+
+     public function index()
+     {
+         // Récupérer la liste de tous les utilisateurs
+         $users = User::all();
+ 
+         return response()->json(['users' => $users], 200);
+     }
+
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
