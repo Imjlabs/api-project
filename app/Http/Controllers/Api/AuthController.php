@@ -43,8 +43,7 @@ class AuthController extends Controller
         $token = $user->createToken('main')->plainTextToken;
         return response()->json(['user' => $user, 'token' => $token]);
     }
-
-
+    
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
@@ -55,6 +54,7 @@ class AuthController extends Controller
         }
 
         /** @var \App\Models\User $user */
+
         $user = Auth::user();
         $token = $user->createToken('main')->plainTextToken;
         return response(compact('user', 'token'));
@@ -63,6 +63,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         /** @var \App\Models\User $user */
+
         $user = $request->user();
         $user->currentAccessToken()->delete();
         return response([
@@ -75,20 +76,17 @@ class AuthController extends Controller
         $user = User::where('email_verified_token', $token)->first();
 
         if (!$user) {
-            // Jeton invalide
+
             return response()->json(['message' => 'Lien de vérification invalide.'], 400);
         }
 
         if ($user->email_verified_at !== null) {
-            // L'e-mail a déjà été vérifié
+
             return response()->json(['message' => 'Votre e-mail a déjà été vérifié.'], 200);
         }
 
-        // Mettez à jour la colonne email_verified_at pour marquer l'e-mail comme vérifié
         $user->email_verified_at = now();
         $user->save();
-
-        // Connectez automatiquement l'utilisateur ou effectuez une autre action souhaitée
 
         return response()->json(['message' => 'Votre e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter.'], 200);
     }
