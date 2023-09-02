@@ -50,5 +50,5 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
 
 Route::middleware('auth:sanctum')->get('/user/email-verification-date', function () {
-    return auth()->user()->email_verified_at;
+    return response()->json([auth()->user()->email_verified_at]);
 });
