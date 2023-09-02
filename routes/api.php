@@ -23,7 +23,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'App\Http\Middleware\IsAdmin
     Route::get('/users', [AdminController::class, 'listUsers']);
     Route::get('/users/{user}/files', [AdminController::class, 'viewUserFiles']);
     Route::get('/users/files', [AdminController::class, 'viewAllUserFiles']);
-
+    Route::get('/total-uploaded-files-count', [AdminController::class, 'totalUploadedFilesCount']);
+Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
+Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
 
 });
 

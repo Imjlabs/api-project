@@ -58,4 +58,32 @@ class AdminController extends Controller
 
         return response()->json(['allFiles' => $allFiles, 'totalFileCount' => $totalFileCount], 200);
     }
+
+    public function totalUploadedFilesCount()
+    {
+        $totalFileCount = File::count();
+
+        return response()->json(['total_uploaded_files' => $totalFileCount], 200);
+    }
+
+    public function uploadedFilesTodayCount()
+    {
+        $today = Carbon::today();
+        $uploadedFilesCountToday = File::whereDate('created_at', $today)->count();
+
+        return response()->json(['uploaded_files_today' => $uploadedFilesCountToday], 200);
+    }
+
+    public function filesPerClient()
+    {
+        $users = User::all();
+        $filesPerClient = [];
+
+        foreach ($users as $user) {
+            $filesCount = $user->files->count();
+            $filesPerClient[$user->name] = $filesCount;
+        }
+
+        return response()->json(['files_per_client' => $filesPerClient], 200);
+    }
 }
