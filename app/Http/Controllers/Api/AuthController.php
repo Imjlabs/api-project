@@ -66,9 +66,7 @@ class AuthController extends Controller
 
         $user = $request->user();
         $user->currentAccessToken()->delete();
-        return response([
-            'message' => 'Utilisateur déconnecté'
-        ], 200);
+        return response()->json(['Utilisateur déconnecté',200]);
     }
 
     public function verifyEmail($token)
