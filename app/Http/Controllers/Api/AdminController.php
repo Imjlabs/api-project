@@ -43,12 +43,12 @@ class AdminController extends Controller
     {
         $users = User::all();
         $allFiles = [];
-        $totalFileCount = 0; // Initialiser le compteur total de fichiers
+        $totalFileCount = 0;
 
         foreach ($users as $user) {
             $files = $user->files;
-            $fileCount = $files->count(); // Compter le nombre de fichiers
-            $totalFileCount += $fileCount; // Ajouter au compteur total
+            $fileCount = $files->count();
+            $totalFileCount += $fileCount;
             $allFiles[$user->id] = [
                 'user' => $user,
                 'files' => $files,

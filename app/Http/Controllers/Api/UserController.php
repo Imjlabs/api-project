@@ -20,7 +20,6 @@ class UserController extends Controller
      
     public function index(User $user)
     {
-        // Vérifiez si l'utilisateur est connecté
         if (Auth::check()) {
             $authenticatedUser = Auth::user();
 
@@ -35,7 +34,6 @@ class UserController extends Controller
     }
     public function show(User $user)
     {
-        // Vérifiez si l'utilisateur est connecté
         if (Auth::check()) {
             $authenticatedUser = Auth::user();
 
@@ -57,11 +55,9 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        // Cette méthode est accessible uniquement pour l'utilisateur connecté
         if (Auth::user()->id === $user->id) {
             $data = $request->validated();
 
-            // Vérification si l'email est unique (ignorer l'email actuel de l'utilisateur)
             if (isset($data['email']) && $data['email'] !== $user->email && User::where('email', $data['email'])->exists()) {
                 return response()->json(['message' => 'L\'email est déjà utilisé par un autre utilisateur'], 409);
             }
@@ -86,7 +82,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Cette méthode est accessible uniquement pour l'utilisateur connecté
         if (Auth::user()->id === $user->id) {
             $user->delete();
 
@@ -96,7 +91,5 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
-
-
     }
 }
