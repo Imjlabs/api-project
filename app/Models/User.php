@@ -33,7 +33,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'available_space', // Champ supplémentaire
         'password',
         'role',
-        'email_verified_token' // Assurez-vous que 'role' est inclus ici
+        'email_verified_token',
+        'email_verified_at' // Assurez-vous que 'role' est inclus ici
     ];
 
     /**
