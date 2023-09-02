@@ -87,7 +87,7 @@ class UserController extends Controller
 
             $user->notify(new AccountDeleted);
             
-            return response("Votre compte à bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
+            return response()->json("Votre compte à bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
