@@ -67,7 +67,7 @@ class AuthController extends Controller
         $user = $request->user();
         $user->currentAccessToken()->delete();
         return response([
-            'message' => 'Utilisateur déconnecté'
+            'message' => ['Utilisateur déconnecté']
         ], 200);
     }
 

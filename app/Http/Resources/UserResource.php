@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'postal_code' => $this->postal_code, // Champ "postal_code"
             'siret_number' => $this->siret_number, // Champ "siret_number"
             'available_space' => $this->available_space, // Champ "available_space"
+            'email_verified_at' => $this->email_verified_at, // Champ "available_space"
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
         
