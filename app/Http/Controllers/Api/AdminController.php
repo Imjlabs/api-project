@@ -125,4 +125,48 @@ public function getFile($userId, $fileId)
     return response()->download(storage_path('app/' . $filePath), $fileName);
 }
 
+public function getUserStorageSize($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Récupérez le chemin du dossier de stockage de l'utilisateur (vous devrez ajuster cela en fonction de votre structure de stockage)
+        $storagePath = 'users/' . $user->id;
+
+        // Récupérez la liste des fichiers dans le stockage de l'utilisateur
+        $files = Storage::files($storagePath);
+
+        // Initialisez une variable pour stocker la taille totale
+        $totalSize = 0;
+
+        // Bouclez à travers les fichiers pour calculer la taille totale
+        foreach ($files as $file) {
+            $totalSize += Storage::size($file);
+        }
+
+        // Formatez la taille totale pour l'afficher en octets, Ko, Mo, Go, etc., en fonction de vos besoins
+        $formattedSize = $this->formatSizeUnits($totalSize);
+
+        return response()->json(['total_size' => $formattedSize], 200);
+    }
+
+    /**
+     * Formatage de la taille en unités lisibles par l'homme (octets, Ko, Mo, Go, etc.).
+     *
+     * @param  int  $bytes
+     * @return string
+     */
+    private function formatSizeUnits($bytes)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        $i = 0;
+
+        while ($bytes >= 1024 && $i < count($units) - 1) {
+            $bytes /= 1024;
+            $i++;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
+    }
 }
+

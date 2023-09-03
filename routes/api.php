@@ -24,11 +24,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/{user}/files', [AdminController::class, 'viewUserFiles']);
     Route::get('/users/files', [AdminController::class, 'viewAllUserFiles']);
     Route::get('/total-uploaded-files-count', [AdminController::class, 'totalUploadedFilesCount']);
-Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
-Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
-Route::get('/users/{userId}/files/{fileId}', [AdminController::class, 'getFile']);
-
-
+    Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
+    Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
+    Route::get('/users/{userId}/files/{fileId}', [AdminController::class, 'getFile']);
+    Route::get('/admin/users/{userId}/storage/size', [AdminController::class, 'getUserStorageSize']);
 });
 
 Route::middleware(['verified'])->group(function () {
@@ -43,7 +42,7 @@ Route::middleware(['verified'])->group(function () {
         });
 
         Route::post('/files/upload', [FileController::class, 'uploadFile']);
-        Route::get('/files',[FileController::class, 'listFiles']);
+        Route::get('/files', [FileController::class, 'listFiles']);
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
 
