@@ -24,9 +24,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/{user}/files', [AdminController::class, 'viewUserFiles']);
     Route::get('/users/files', [AdminController::class, 'viewAllUserFiles']);
     Route::get('/total-uploaded-files-count', [AdminController::class, 'totalUploadedFilesCount']);
-Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
-Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
-
+    Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
+    Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
 });
 
 Route::middleware(['verified'])->group(function () {
@@ -40,10 +39,16 @@ Route::middleware(['verified'])->group(function () {
             Route::delete('/users/{user}', [UserController::class, 'destroy']);
         });
 
-        Route::post('/upload-file', [FileController::class, 'uploadFile']);
-        Route::delete('/delete-file/{fileId}', [FileController::class, 'deleteFile']);
-        Route::get('/list-files', [FileController::class, 'listFiles']);
-        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/files/upload', 'FileController@uploadFile');
+
+        // Liste de tous les fichiers de l'utilisateur authentifié
+        Route::get('/files', 'FileController@listFiles');
+
+        // Récupération d'un fichier spécifique pour l'utilisateur authentifié
+        Route::get('/files/{fileId}', 'FileController@getFile');
+
+        // Suppression d'un fichier spécifique pour l'utilisateur authentifié
+        Route::delete('/files/{fileId}', 'FileController@deleteFile');
     });
 });
 
