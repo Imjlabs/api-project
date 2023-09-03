@@ -39,7 +39,7 @@ Route::middleware(['verified'])->group(function () {
             Route::get('/users/{user}', [UserController::class, 'show']);
             Route::put('/users/{user}', [UserController::class, 'update']);
             Route::delete('/users/{user}', [UserController::class, 'destroy']);
-            Route::delete('/users/storage/size', [UserController::class, 'getUserStorageSize']);
+            Route::get('/users/storage/size', [UserController::class, 'getUserStorageSize']);
         });
 
         Route::post('/files/upload', [FileController::class, 'uploadFile']);
