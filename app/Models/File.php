@@ -16,6 +16,7 @@ class File extends Authenticatable
         'added_at',
         'file_path',
         'user_id',
+        'file_size'
     ];
 
     public function user()

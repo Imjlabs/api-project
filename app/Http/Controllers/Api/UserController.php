@@ -20,27 +20,33 @@ class UserController extends Controller
      */
 
      
-    public function index(User $user)
-    {
-        if (Auth::check()) {
-            $authenticatedUser = Auth::user();
+     public function index(User $user)
+     {
+         if (Auth::check()) {
+             $authenticatedUser = Auth::user();
+     
+             if ($authenticatedUser->id === $user->id) {
 
-            if ($authenticatedUser->id === $user->id) {
-                return new UserResource($user);
-            } else {
-                return response()->json(['message' => 'Accès non autorisé'], 403);
-            }
-        } else {
-            return response()->json(['message' => 'Utilisateur non connecté'], 401);
-        }
-    }
+                 $userWithStorageInfo = User::with('files')->find($user->id);
+     
+                 return new UserResource($userWithStorageInfo);
+             } else {
+                 return response()->json(['message' => 'Accès non autorisé'], 403);
+             }
+         } else {
+             return response()->json(['message' => 'Utilisateur non connecté'], 401);
+         }
+     }
+     
     public function show(User $user)
     {
         if (Auth::check()) {
             $authenticatedUser = Auth::user();
-
+    
             if ($authenticatedUser->id === $user->id) {
-                return new UserResource($user);
+                $userWithStorageInfo = User::with('files')->find($user->id);
+    
+                return new UserResource($userWithStorageInfo);
             } else {
                 return response()->json(['message' => 'Accès non autorisé'], 403);
             }
@@ -84,18 +90,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Vérifiez si l'utilisateur actuellement authentifié est le même que l'utilisateur que vous souhaitez supprimer
+
         if (Auth::user()->id === $user->id) {
-            // Supprimez tous les fichiers de l'utilisateur
             File::where('user_id', $user->id)->delete();
     
-            // Supprimez l'utilisateur lui-même
             $user->delete();
             
             $admin = User::where('email', 'admin@example.com')->first(); 
-            // Remplacez par l'administrateur réel ou fictif
-            
-            // Envoyez une notification ou un message de confirmation, si nécessaire
+
             $user->notify(new AccountDeleted);
 
             $admin->notify(new UserDeletedNotification($user));

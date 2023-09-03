@@ -24,21 +24,17 @@ class FileController extends Controller
 
         $user = Auth::user();
         $uploadedFile = $request->file('file');
-
-        // Générez un nom de fichier unique
         $fileName = time() . '_' . $uploadedFile->getClientOriginalName();
 
-        // Stockez le fichier dans un dossier spécifique pour chaque utilisateur
         $path = $uploadedFile->storeAs('uploads/' . $user->id, $fileName);
 
         $fileSize = $uploadedFile->getSize();
 
-        // Créez une entrée de fichier dans la base de données
         $file = new File([
             'file_name' => $fileName,
             'added_at' => now(),
             'file_path' => $path,
-            'file_size' => $fileSize, // Enregistrez la taille du fichier
+            'file_size' => $fileSize,
         ]);
 
         $user->files()->save($file);
@@ -61,7 +57,6 @@ class FileController extends Controller
             return response()->json(['message' => 'Fichier non trouvé'], 404);
         }
 
-        // Supprimez le fichier du stockage
         Storage::delete($file->file_path);
 
         $file->delete();
@@ -94,16 +89,13 @@ class FileController extends Controller
     {
         $user = Auth::user();
 
-        // Recherchez le fichier dans la base de données pour l'utilisateur authentifié
         $file = $user->files()->find($fileId);
 
         if (!$file) {
             return response()->json(['message' => 'Fichier non trouvé'], 404);
         }
 
-        // Vérifiez si le fichier existe dans le stockage
         if (Storage::exists($file->file_path)) {
-            // Si le fichier existe, renvoyez-le en tant que réponse
             return response()->stream(function () use ($file) {
                 echo Storage::get($file->file_path);
             }, 200, [
