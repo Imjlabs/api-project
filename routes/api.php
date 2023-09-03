@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\AdminController;
 */
 
 
-Route::prefix('admin')->middleware(['auth:sanctum', 'App\Http\Middleware\IsAdmin'])->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/users', [AdminController::class, 'listUsers']);
     Route::get('/users/{user}/files', [AdminController::class, 'viewUserFiles']);
     Route::get('/users/files', [AdminController::class, 'viewAllUserFiles']);
@@ -52,5 +52,5 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
 
 Route::middleware('auth:sanctum')->get('/user/email-verification-date', function () {
-    return response()->json(['email_verified_at' => auth()->user()->email_verified_at]);
+    return response()->json([auth()->user()->email_verified_at]);
 });
