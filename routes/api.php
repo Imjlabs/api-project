@@ -41,10 +41,8 @@ Route::middleware(['verified'])->group(function () {
         });
 
         Route::post('/files/upload', [FileController::class, 'uploadFile']);
-
         // Liste de tous les fichiers de l'utilisateur authentifié
         Route::get('/files',[FileController::class, 'listFiles']);
-    
         // Récupération d'un fichier spécifique pour l'utilisateur authentifié
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);

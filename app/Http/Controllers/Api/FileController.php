@@ -19,7 +19,7 @@ class FileController extends Controller
     public function uploadFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:10240', // Limitez la taille du fichier à 10 Mo (10240 Ko)
+            'file' => 'required', // Limitez la taille du fichier à 10 Mo (10240 Ko)
         ]);
 
         $user = Auth::user();
