@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
+use App\Models\File;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\File;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -87,4 +88,41 @@ class AdminController extends Controller
 
         return response()->json(['files_per_client' => $filesPerClient], 200);
     }
+
+/**
+ * Récupère un fichier d'un utilisateur spécifique au format JSON.
+ *
+ * @param  int  $userId
+ * @param  int  $fileId
+ * @return \Illuminate\Http\JsonResponse
+ */
+
+
+public function getFile($userId, $fileId)
+{
+    $user = User::findOrFail($userId);
+    $file = File::findOrFail($fileId);
+
+    // Vérifiez si le fichier appartient à l'utilisateur
+    if ($file->user_id !== $userId) {
+        return response()->json("Ce fichier n'appartient pas à cette utilisateur",404);
+    }
+
+    // Vous pouvez également ajouter des vérifications de sécurité supplémentaires ici, comme les autorisations de l'administrateur
+
+    // Récupérez le chemin du fichier
+    $filePath = $file->file_path;
+
+    // Vérifiez si le fichier existe
+    if (!Storage::exists($filePath)) {
+        return response()->json(['error' => 'Le fichier n\'existe pas.'], 404);
+    }
+
+    // Obtenez le nom du fichier
+    $fileName = pathinfo($filePath, PATHINFO_FILENAME);
+
+    // Définissez les en-têtes de la réponse pour le téléchargement
+    return response()->download(storage_path('app/' . $filePath), $fileName);
+}
+
 }
