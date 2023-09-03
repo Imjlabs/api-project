@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Carbon\Carbon;
-use App\Models\File;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\File;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -19,7 +19,7 @@ class AdminController extends Controller
     public function listUsers()
     {
 
-        $users = User::all();
+        $users = User::where('role', 'user')->get();
 
         return response()->json(['users' => $users]);
     }
