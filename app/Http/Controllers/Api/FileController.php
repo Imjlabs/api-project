@@ -31,11 +31,14 @@ class FileController extends Controller
         // Stockez le fichier dans un dossier spécifique pour chaque utilisateur
         $path = $uploadedFile->storeAs('uploads/' . $user->id, $fileName);
 
+        $fileSize = $uploadedFile->getSize();
+
         // Créez une entrée de fichier dans la base de données
         $file = new File([
             'file_name' => $fileName,
             'added_at' => now(),
             'file_path' => $path,
+            'file_size' => $fileSize, // Enregistrez la taille du fichier
         ]);
 
         $user->files()->save($file);
@@ -76,7 +79,9 @@ class FileController extends Controller
         $user = Auth::user();
         $files = $user->files;
 
-        return response()->json(['files' => $files], 200);
+        $totalSize = $user->files()->sum('file_size');
+
+        return response()->json(['files' => $files, 'total_size' => $totalSize], 200);
     }
 
     /**

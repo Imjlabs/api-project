@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\File;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\AccountDeleted;
 use App\Http\Requests\UpdateUserRequest;
+use App\Notifications\UserDeletedNotification;
 
 class UserController extends Controller
 {
@@ -82,14 +84,25 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        // Vérifiez si l'utilisateur actuellement authentifié est le même que l'utilisateur que vous souhaitez supprimer
         if (Auth::user()->id === $user->id) {
+            // Supprimez tous les fichiers de l'utilisateur
+            File::where('user_id', $user->id)->delete();
+    
+            // Supprimez l'utilisateur lui-même
             $user->delete();
-
-            $user->notify(new AccountDeleted);
             
-            return response()->json("Votre compte à bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
+            $admin = User::where('email', 'admin@example.com')->first(); 
+            // Remplacez par l'administrateur réel ou fictif
+            
+            // Envoyez une notification ou un message de confirmation, si nécessaire
+            $user->notify(new AccountDeleted);
+
+            $admin->notify(new UserDeletedNotification($user));
+            
+            return response()->json("Votre compte a bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
-    }
+}
 }
