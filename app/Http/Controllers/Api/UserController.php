@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\AccountDeleted;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateUserRequest;
 use App\Notifications\UserDeletedNotification;
 
@@ -107,4 +108,58 @@ class UserController extends Controller
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
 }
+
+    /**
+     * Récupère la taille totale des fichiers stockés dans le dossier de l'utilisateur connecté.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserStorageSize()
+    {
+        $user = Auth::user(); // Récupère l'utilisateur actuellement authentifié
+
+        if (!$user) {
+            return response()->json(['error' => 'Aucun utilisateur connecté.'], 401);
+        }
+
+        // Récupérez le chemin du dossier de stockage de l'utilisateur (vous devrez ajuster cela en fonction de votre structure de stockage)
+        $storagePath = 'users/' . $user->id;
+
+        // Récupérez la liste des fichiers dans le stockage de l'utilisateur
+        $files = Storage::files($storagePath);
+
+        // Initialisez une variable pour stocker la taille totale
+        $totalSize = 0;
+
+        // Bouclez à travers les fichiers pour calculer la taille totale
+        foreach ($files as $file) {
+            $totalSize += Storage::size($file);
+        }
+
+        // Formatez la taille totale pour l'afficher en octets, Ko, Mo, Go, etc., en fonction de vos besoins
+        $formattedSize = $this->formatSizeUnits($totalSize);
+
+        return response()->json(['total_size' => $formattedSize], 200);
+    }
+
+    /**
+     * Formatage de la taille en unités lisibles par l'homme (octets, Ko, Mo, Go, etc.).
+     *
+     * @param  int  $bytes
+     * @return string
+     */
+    private function formatSizeUnits($bytes)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        $i = 0;
+
+        while ($bytes >= 1024 && $i < count($units) - 1) {
+            $bytes /= 1024;
+            $i++;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
+    }
 }
+
