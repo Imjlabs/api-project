@@ -98,15 +98,10 @@ class AdminController extends Controller
  */
 
 
-public function getFile($userId, $fileId)
+public function getFile($fileId)
 {
-    $user = User::findOrFail($userId);
     $file = File::findOrFail($fileId);
 
-    // Vérifiez si le fichier appartient à l'utilisateur
-    if ($file->user_id !== $userId) {
-        return response()->json("Ce fichier n'appartient pas à cette utilisateur",404);
-    }
 
     // Vous pouvez également ajouter des vérifications de sécurité supplémentaires ici, comme les autorisations de l'administrateur
 

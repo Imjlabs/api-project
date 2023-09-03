@@ -26,7 +26,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/total-uploaded-files-count', [AdminController::class, 'totalUploadedFilesCount']);
     Route::get('/uploaded-files-today-count', [AdminController::class, 'uploadedFilesTodayCount']);
     Route::get('/files-per-client', [AdminController::class, 'filesPerClient']);
-    Route::get('/users/{userId}/files/{fileId}', [AdminController::class, 'getFile']);
+    Route::get('/users/files/{fileId}', [AdminController::class, 'getFile']);
     Route::get('/admin/users/{userId}/storage/size', [AdminController::class, 'getUserStorageSize']);
 });
 
