@@ -48,7 +48,7 @@ Route::middleware(['verified'])->group(function () {
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
         Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-
+//
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
