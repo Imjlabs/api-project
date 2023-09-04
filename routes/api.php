@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Http\Request;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AdminController;
-use App\Http\Controllers\PaymentController;
-use Faker\Provider\ar_EG\Payment;
+use App\Http\Controllers\API\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,11 @@ Route::middleware(['verified'])->group(function () {
             Route::put('/users/{user}', [UserController::class, 'update']);
             Route::delete('/users/{user}', [UserController::class, 'destroy']);
             Route::get('/users/storage/size', [UserController::class, 'getUserStorageSize']);
+            // Route pour afficher toutes les factures pour l'utilisateur connecté
+            Route::get('/invoices', [InvoiceController::class, 'index'])->middleware('auth:api'); // Middleware d'authentification API
+
+            // Route pour afficher une facture spécifique par ID pour l'utilisateur connecté
+            Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->middleware('auth:api'); // Middleware d'authentification API
         });
 
         Route::post('/files/upload', [FileController::class, 'uploadFile']);
@@ -48,8 +54,7 @@ Route::middleware(['verified'])->group(function () {
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
         Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-//
-
+        Route::post('/confirm-payment/{client_secret}', [PaymentController::class, 'confirmPayment']);
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });

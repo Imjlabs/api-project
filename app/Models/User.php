@@ -66,6 +66,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(File::class);
     }
 
+    public function invoices()
+{
+    return $this->hasMany(Invoice::class);
+}
     public function usedSpace(): int
     {
         return $this->files()->sum('file_size');
