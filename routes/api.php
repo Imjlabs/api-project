@@ -34,7 +34,6 @@ Route::middleware(['verified'])->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware(['auth:sanctum'])->group(function () {
-
             Route::get('/users', [UserController::class, 'index']);
             Route::get('/users/{user}', [UserController::class, 'show']);
             Route::put('/users/{user}', [UserController::class, 'update']);
@@ -46,6 +45,8 @@ Route::middleware(['verified'])->group(function () {
         Route::get('/files', [FileController::class, 'listFiles']);
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
+        Route::post('/create-payment-intent', 'PaymentController@createPaymentIntent');
+
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
