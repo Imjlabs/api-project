@@ -9,10 +9,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 
 
-class PaymentController extends Controller
-{
-
-
     class PaymentController extends Controller
     {
         public function createPaymentIntent(Request $request)
@@ -42,4 +38,3 @@ class PaymentController extends Controller
             }
         }
     }
-}    
