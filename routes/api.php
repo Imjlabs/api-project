@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\PaymentController;
+use Faker\Provider\ar_EG\Payment;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +47,7 @@ Route::middleware(['verified'])->group(function () {
         Route::get('/files', [FileController::class, 'listFiles']);
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
-        Route::post('/create-payment-intent', 'PaymentController@createPaymentIntent');
+        Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 
 
         Route::post('/logout', [AuthController::class, 'logout']);
