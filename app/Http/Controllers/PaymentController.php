@@ -34,7 +34,8 @@ use Illuminate\Support\Facades\Log;
                 return response()->json(['client_secret' => $paymentIntent->client_secret], 200);
             } catch (\Exception $error) {
                 \Log::error($error);
-                return response()->json(['error' => 'Une erreur est survenue lors de la création du paiement intent.'], 500);
+                return response()->json(['error' => 'Une erreur est survenue lors de la création du paiement intent.',
+            "test" => "test"], 500);
             }
         }
     }
