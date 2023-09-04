@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Log;
                     'currency' => $currency,
                 ]);
     
+                
                 return response()->json(['client_secret' => $paymentIntent->client_secret,
                 "test" => "test"], 200);
             } catch (\Exception $error) {
