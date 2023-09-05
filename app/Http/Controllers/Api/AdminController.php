@@ -50,10 +50,6 @@ class AdminController extends Controller
             $spaceUsed = $userTotalFileSize / 1024; // Convertir en Mo
             $totalSpaceUsed += $spaceUsed;
         }
-    
-        // Calculer l'espace restant
-        $totalSpaceRemaining = $totalAvailableSpace - $totalSpaceUsed;
-    // Espace total utilisé
 
     return response()->json([
         'allFiles' => $allFiles,
