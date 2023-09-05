@@ -46,21 +46,48 @@ class AdminController extends Controller
         $users = User::all();
         $allFiles = [];
         $totalFileCount = 0;
-
+        $totalFileSize = 0; // Taille totale des fichiers
+        $totalAvailableSpace = 0; // Taille disponible totale
+        $totalSpaceUsed = 0; // Espace total utilisé
+    
         foreach ($users as $user) {
             $files = $user->files;
             $fileCount = $files->count();
             $totalFileCount += $fileCount;
+    
+            // Calculer la taille totale des fichiers pour cet utilisateur
+            $userTotalFileSize = $files->sum('file_size');
+            $totalFileSize += $userTotalFileSize;
+    
+            // Ajouter la taille disponible de cet utilisateur à la taille disponible totale
+            $totalAvailableSpace += $user->available_space;
+    
             $allFiles[$user->id] = [
                 'user' => $user,
                 'files' => $files,
                 'file_count' => $fileCount,
+                'user_total_file_size' => $userTotalFileSize,
             ];
+    
+            // Calculer l'espace utilisé par cet utilisateur
+            $spaceUsed = $userTotalFileSize / 1024; // Convertir en Mo
+            $totalSpaceUsed += $spaceUsed;
         }
-
-        return response()->json(['allFiles' => $allFiles, 'totalFileCount' => $totalFileCount], 200);
+    
+        // Calculer l'espace restant
+        $totalSpaceRemaining = $totalAvailableSpace - $totalSpaceUsed;
+    
+        // Ajouter l'espace restant dans la réponse JSON
+        return response()->json([
+            'allFiles' => $allFiles,
+            'totalFileCount' => $totalFileCount,
+            'totalFileSize' => $totalFileSize,
+            'totalAvailableSpace' => $totalAvailableSpace,
+            'totalSpaceUsed' => $totalSpaceUsed,
+            'totalSpaceRemaining' => $totalSpaceRemaining, // Espace restant
+        ], 200);
     }
-
+    
     public function totalUploadedFilesCount()
     {
         $totalFileCount = File::count();
