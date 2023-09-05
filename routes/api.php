@@ -33,8 +33,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/admin/users/{userId}/storage/size', [AdminController::class, 'getUserStorageSize']);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['verified'])->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/users', [UserController::class, 'index']);
@@ -61,9 +61,9 @@ Route::middleware(['verified'])->group(function () {
 
 
     });
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
