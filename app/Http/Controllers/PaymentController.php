@@ -72,13 +72,13 @@ class PaymentController extends Controller
         $invoice->user_id = $user->id;
 
         // Remplir les autres champs en dur
-        $invoice->company_name = 'Nom de votre société';
-        $invoice->company_address = 'Adresse de votre société';
-        $invoice->company_siret = 'Numéro de SIRET de votre société';
+        $invoice->company_name = 'Artichecturae';
+        $invoice->company_address = '28 rue claude tillier';
+        $invoice->company_siret = '125 485698 8563';
         $invoice->invoice_date = now();
-        $invoice->invoice_description = 'Description de la facture';
-        $invoice->unit_price = 100; // Prix unitaire hors taxe
-        $invoice->quantity = 2; // Quantité
+        $invoice->invoice_description = 'Achat de 20 go de stockage';
+        $invoice->unit_price = 16; // Prix unitaire hors taxe
+        $invoice->quantity = 1; // Quantité
         $invoice->vat_rate = 20; // Taux de TVA en pourcentage
 
         // Calculer les montants HT, TVA et TTC
@@ -94,8 +94,8 @@ class PaymentController extends Controller
         // Enregistrer la facture dans la base de données
         $invoice->save();
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadView('invoices.invoice_pdf', compact('invoice'));
+        // Générer le contenu de la facture au format PDF
+        $pdf = PDF::loadView('invoices.invoice_pdf', compact('invoice'));
 
         // Générer un nom unique pour le fichier PDF
         $pdfFileName = 'invoice_' . $user->id . '_' . uniqid() . '.pdf';
@@ -103,8 +103,11 @@ class PaymentController extends Controller
         // Obtenir le nom d'utilisateur (par exemple, l'email ou le nom d'utilisateur)
         $username = $user->id; // Vous pouvez ajuster ceci en fonction de la manière dont vous identifiez l'utilisateur
 
+        // Créer le répertoire de destination s'il n'existe pas
+        Storage::makeDirectory('uploads/' . $username . '/invoices');
+
         // Stocker le fichier PDF dans le répertoire storage/app/uploads/{nom_utilisateur}/invoices
-        $pdf->storeAs('uploads/' . $username . '/invoices', $pdfFileName, 'local');
+        Storage::put('uploads/' . $username . '/invoices/' . $pdfFileName, $pdf->output());
 
         // Mettre à jour l'espace de stockage de l'utilisateur (ajouter 20 Go)
         $user->increment('available_space', 20 * 1024); // 1 Go = 1024 Mo
@@ -112,4 +115,6 @@ class PaymentController extends Controller
         // Retourner la facture générée en réponse HTTP
         return response()->json(['message' => 'Facture créée et espace de stockage mis à jour avec succès', 'invoice' => $invoice]);
     }
+
+
 }
