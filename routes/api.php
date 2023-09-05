@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AdminController;
-use App\Http\Controllers\API\InvoiceController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
