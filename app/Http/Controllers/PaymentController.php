@@ -87,7 +87,7 @@ class PaymentController extends Controller
         $invoice->total_ttc = $invoice->total_ht + $invoice->vat_amount;
 
         // Autres informations (à ajuster selon vos besoins)
-        $invoice->payment_method = 'Chèque';
+        $invoice->payment_method = 'Carte Bancaire';
         $invoice->due_date = now()->addDays(30);
         $invoice->notes = 'Remarques facultatives';
 
