@@ -16,18 +16,26 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('invoice_number')->unique();
+            $table->string('client_first_name');
+            $table->string('client_last_name');
+            $table->string('client_address');
+            $table->string('company_name');
+            $table->string('company_address');
+            $table->string('company_siret');
             $table->date('invoice_date');
-            $table->string('recipient_name');
-            $table->decimal('total_amount', 10, 2); // Utilisez la précision appropriée
+            $table->string('invoice_description');
+            $table->decimal('unit_price', 10, 2);
+            $table->integer('quantity');
+            $table->decimal('total_ht', 10, 2);
+            $table->decimal('vat_rate', 5, 2);
+            $table->decimal('vat_amount', 10, 2);
+            $table->decimal('total_ttc', 10, 2);
             $table->string('payment_method');
             $table->date('due_date');
-            $table->string('payment_status');
-            $table->json('provider_info'); // Utilisez le type de colonne JSON pour stocker les informations du fournisseur
+            $table->text('notes')->nullable();
             $table->timestamps();
 
-            // Clé étrangère vers la table des utilisateurs
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

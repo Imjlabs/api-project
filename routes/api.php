@@ -54,7 +54,12 @@ Route::middleware(['verified'])->group(function () {
         Route::get('/files/{fileId}', [FileController::class, 'getFile']);
         Route::delete('/files/{fileId}', [FileController::class, 'deleteFile']);
         Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-        Route::post('/confirm-payment/{client_secret}', [PaymentController::class, 'confirmPayment']);
+        Route::post('/confirm-payment', [PaymentController::class, 'confirmPayment']);
+        Route::get('user/invoices', [InvoiceController::class, 'getUserInvoices']);
+        Route::get('user/invoice/{invoiceId}', [InvoiceController::class, 'getInvoice']);
+        Route::post('add-storage-space', [UserController::class, 'addStorageSpace']);
+
+
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });

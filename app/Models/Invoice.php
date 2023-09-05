@@ -11,14 +11,23 @@ class Invoice extends Model
 
     protected $fillable = [
         'user_id',
-        'invoice_number',
+        'client_first_name',
+        'client_last_name',
+        'client_address',
+        'company_name',
+        'company_address',
+        'company_siret',
         'invoice_date',
-        'recipient_name',
-        'total_amount',
+        'invoice_description',
+        'unit_price',
+        'quantity',
+        'vat_rate',
+        'vat_amount',
+        'total_ht',
+        'total_ttc',
         'payment_method',
         'due_date',
-        'payment_status',
-        'provider_info', // Les informations du fournisseur ou de l'émetteur de la facture
+        'notes',
     ];
 
     public function user()

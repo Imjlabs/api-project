@@ -161,5 +161,17 @@ class UserController extends Controller
 
         return round($bytes, 2) . ' ' . $units[$i];
     }
+
+    public function addStorageSpace(Request $request)
+    {
+        // Récupérer l'utilisateur connecté
+        $user = auth()->user();
+
+        // Ajouter 20 Go d'espace de stockage (1 Go = 1024 Mo)
+        $user->increment('available_space', 20 * 1024);
+
+        // Retourner une réponse JSON pour indiquer que l'espace de stockage a été ajouté avec succès
+        return response()->json(['message' => '20 Go d\'espace de stockage ont été ajoutés avec succès', 'user' => $user]);
+    }
 }
 
