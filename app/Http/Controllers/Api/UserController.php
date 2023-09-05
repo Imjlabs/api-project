@@ -117,30 +117,28 @@ class UserController extends Controller
     public function getUserStorageSize()
     {
         $user = Auth::user(); // Récupère l'utilisateur actuellement authentifié
-
+    
         if (!$user) {
             return response()->json(['error' => 'Aucun utilisateur connecté.'], 401);
         }
-
+    
         // Récupérez le chemin du dossier de stockage de l'utilisateur (vous devrez ajuster cela en fonction de votre structure de stockage)
         $storagePath = 'users/' . $user->id;
-
+    
         // Récupérez la liste des fichiers dans le stockage de l'utilisateur
         $files = Storage::files($storagePath);
-
+    
         // Initialisez une variable pour stocker la taille totale
         $totalSize = 0;
-
+    
         // Bouclez à travers les fichiers pour calculer la taille totale
         foreach ($files as $file) {
             $totalSize += Storage::size($file);
         }
-
-        // Formatez la taille totale pour l'afficher en octets, Ko, Mo, Go, etc., en fonction de vos besoins
-        $formattedSize = $this->formatSizeUnits($totalSize);
-
-        return response()->json(['total_size' => $formattedSize], 200);
+    
+        return response()->json(['total_size' => $totalSize], 200);
     }
+    
 
     /**
      * Formatage de la taille en unités lisibles par l'homme (octets, Ko, Mo, Go, etc.).
