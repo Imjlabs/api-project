@@ -60,10 +60,10 @@ Route::middleware(['verified'])->group(function () {
         Route::post('add-storage-space', [UserController::class, 'addStorageSpace']);
 
 
-        Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
 
+Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
