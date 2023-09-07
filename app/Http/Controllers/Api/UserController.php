@@ -98,11 +98,11 @@ class UserController extends Controller
             File::where('user_id', $user->id)->delete();
             Invoice::where('user_id', $user->id)->delete();
             
-            $admin = User::where('email', 'admin@example.com')->first(); 
+            $admin = User::where('email', 'admin@architecturae.com')->first(); 
             
             $user->notify(new AccountDeleted);
             
-            $admin->notify(new UserDeletedNotification($user));
+            $admin->notify(new UserDeletedNotification());
             
             $user->delete();
             return response()->json("Votre compte a bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);

@@ -32,15 +32,10 @@ class UserDeletedNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail($notifiable)
+    public function toMail()
     {
-        $userName = $notifiable->first_name . $notifiable->name; // Remplacez par le nom de l'utilisateur supprimé
-        $fileCount = $notifiable->files()->count(); // Comptez les fichiers supprimés
-
         return (new MailMessage)
-            ->line('Un utilisateur a supprimé son compte :')
-            ->line('Nom du client : ' . $userName)
-            ->line('Nombre de fichiers supprimés : ' . $fileCount);
+            ->line('le compte d\'un utilisateur a été supprimé avec succès.');
     }
 
     /**
