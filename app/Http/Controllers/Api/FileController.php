@@ -61,7 +61,7 @@ class FileController extends Controller
 
         $file->delete();
 
-        return response()->json(['message' => 'Fichier supprimé avec succès'], 200);
+        return response()->json(['message' => 'Fichier supprimé avec succès', "file" => $file], 200);
     }
 
     /**
