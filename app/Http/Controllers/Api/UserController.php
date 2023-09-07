@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\AccountDeleted;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Invoice;
 use App\Notifications\UserDeletedNotification;
 
 class UserController extends Controller
@@ -91,27 +92,24 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Vérifiez si l'utilisateur connecté est autorisé à supprimer cet utilisateur
+
         if (Auth::user()->id === $user->id) {
-            // Supprimez tous les fichiers de l'utilisateur
+            
             File::where('user_id', $user->id)->delete();
-    
-            // Notifiez l'administrateur de la suppression de l'utilisateur
-            $admin = User::where('email', 'admin@example.com')->first();
-            $admin->notify(new UserDeletedNotification($user));
-    
-            // Supprimez l'utilisateur lui-même
+            Invoice::where('user_id', $user->id)->delete();
             $user->delete();
-    
-            // Notifiez l'utilisateur que son compte a été supprimé
+            
+            $admin = User::where('email', 'admin@example.com')->first(); 
+
             $user->notify(new AccountDeleted);
-    
+
+            $admin->notify(new UserDeletedNotification($user));
+            
             return response()->json("Votre compte a bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
-    }
-    
+}
 
     /**
      * Récupère la taille totale des fichiers stockés dans le dossier de l'utilisateur connecté.
