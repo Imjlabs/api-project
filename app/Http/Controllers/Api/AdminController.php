@@ -52,7 +52,7 @@ class AdminController extends Controller
         }
 
     return response()->json([
-        'allFiles' => $allFiles,
+        'allUsers' => $allFiles,
         'totalFileCount' => $totalFileCount,
         'totalFileSize' => $totalFileSize, // Espace restant
     ], 200);
