@@ -44,9 +44,9 @@ Route::middleware(['verified'])->group(function () {
             Route::get('/users/storage/size', [UserController::class, 'getUserStorageSize']);
             // Route pour afficher toutes les factures pour l'utilisateur connecté
             Route::get('/invoices', [InvoiceController::class, 'index'])->middleware('auth:api'); // Middleware d'authentification API
-
             // Route pour afficher une facture spécifique par ID pour l'utilisateur connecté
-            Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->middleware('auth:api'); // Middleware d'authentification API
+            Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->middleware('auth:api');
+            Route::get('invoices/user/{invoice_id}',[InvoiceController::class, 'downloadInvoice']);
         });
 
         Route::post('/files/upload', [FileController::class, 'uploadFile']);

@@ -28,6 +28,7 @@ class Invoice extends Model
         'payment_method',
         'due_date',
         'notes',
+        'pdf_file_name', // Ajoutez le champ pour le nom du fichier PDF
     ];
 
     public function user()
@@ -35,3 +36,4 @@ class Invoice extends Model
         return $this->belongsTo(User::class);
     }
 }
+

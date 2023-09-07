@@ -33,6 +33,7 @@ class CreateInvoicesTable extends Migration
             $table->string('payment_method');
             $table->date('due_date');
             $table->text('notes')->nullable();
+            $table->string('pdf_file_name')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
