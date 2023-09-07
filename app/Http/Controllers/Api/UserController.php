@@ -103,9 +103,9 @@ class UserController extends Controller
             
             $invoices = Invoice::where('user_id', $user->id)->get();
             
-            foreach ($invoices as $invoice) {
-                Storage::delete($invoice->file_path); // Supprimez le fichier lié à la facture en utilisant son chemin de stockage
-            }
+            // foreach ($invoices as $invoice) {
+            //     Storage::delete($invoice->file_path); // Supprimez le fichier lié à la facture en utilisant son chemin de stockage
+            // }
             
             File::where('user_id', $user->id)->delete();
             Invoice::where('user_id', $user->id)->delete();
