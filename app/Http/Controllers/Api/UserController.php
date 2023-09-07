@@ -97,14 +97,14 @@ class UserController extends Controller
             
             File::where('user_id', $user->id)->delete();
             Invoice::where('user_id', $user->id)->delete();
-            $user->delete();
             
             $admin = User::where('email', 'admin@example.com')->first(); 
-
+            
             $user->notify(new AccountDeleted);
-
+            
             $admin->notify(new UserDeletedNotification($user));
             
+            $user->delete();
             return response()->json("Votre compte a bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
