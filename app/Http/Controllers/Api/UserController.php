@@ -91,23 +91,27 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-
+        // Vérifiez si l'utilisateur connecté est autorisé à supprimer cet utilisateur
         if (Auth::user()->id === $user->id) {
+            // Supprimez tous les fichiers de l'utilisateur
             File::where('user_id', $user->id)->delete();
     
-            $user->delete();
-            
-            $admin = User::where('email', 'admin@example.com')->first(); 
-
-            $user->notify(new AccountDeleted);
-
+            // Notifiez l'administrateur de la suppression de l'utilisateur
+            $admin = User::where('email', 'admin@example.com')->first();
             $admin->notify(new UserDeletedNotification($user));
-            
+    
+            // Supprimez l'utilisateur lui-même
+            $user->delete();
+    
+            // Notifiez l'utilisateur que son compte a été supprimé
+            $user->notify(new AccountDeleted);
+    
             return response()->json("Votre compte a bien été supprimé ! Ravi de vous avoir compté parmi nos utilisateurs", 200);
         } else {
             return response()->json(['message' => 'Accès non autorisé'], 403);
         }
-}
+    }
+    
 
     /**
      * Récupère la taille totale des fichiers stockés dans le dossier de l'utilisateur connecté.
