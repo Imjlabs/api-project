@@ -134,7 +134,7 @@ class AdminController extends Controller
 
     public function filesPerClient()
     {
-        $users = User::all();
+        $users = User::where('role', 'user')->get();
         $filesPerClient = [];
 
         foreach ($users as $user) {
